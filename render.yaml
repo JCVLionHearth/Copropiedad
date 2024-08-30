@@ -1,9 +1,9 @@
 # Exported from Render on 2024-07-29T23:28:33Z
 services:
 - type: web
-  name: Registro_Tickets
+  name: Registro_Apartamento
   runtime: python
-  repo: https://github.com/JCVLionHearth/Tickets
+  repo: https://github.com/JCVLionHearth/Copropiedad
   plan: starter
   region: oregon
   buildCommand: pip install -r requirements.txt
