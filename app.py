@@ -15,7 +15,9 @@ app = Flask(__name__)
 app.secret_key = 'your_secret_key'
 
 # ruta del disco persistente
-db_dir='/var/data'
+# db_dir='/var/data'
+db_dir=os.path.join(os.getcwd(),'data')
+
 os.makedirs(db_dir,exist_ok=True)
 db_path=os.path.join(db_dir,'tickets.db')
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tickets.db'
