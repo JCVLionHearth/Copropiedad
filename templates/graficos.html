@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Gráficos{% endblock %}
+{% block content %}
+<style>
+    .graph-container {
+        display: flex;
+        justify-content: space-around;
+    }
+    .graph {
+        width: 45%;
+    }
+</style>
+</head>
+<body>
+<!-- <div class="graph-container"> -->
+<div class="graph">
+<h2>Distribución de Tickets</h2>
+<img src="{{ graph_url_waffle }}" alt="Gráfico de Barras">
+</div>
+<div class="graph">
+<h2>Estadísticas de Asistencia</h2>
+<img src="{{ graph_url_barras }}" alt="Gráfico de Waffle">
+</div>
+<!-- </div> -->
+<a href="{{ url_for('dashboard') }}">Volver al Dashboard</a>
+</body>
+
+{% endblock %}

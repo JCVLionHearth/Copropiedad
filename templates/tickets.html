@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Tickets{% endblock %}
+{% block content %}
+<h2>Códigos</h2>
+<div class="row">
+<div class="col-md-6">
+<h3>Códigos Registrados</h3>
+<ul class="list-group">
+    {% for ticket in registrados %}
+<li class="list-group-item">
+        Código: {{ ticket.number }},
+        Coef: {{ ticket.category }}
+        <!-- Usuario: {{ ticket.user }}, -->
+        <!-- Día/hora: {{ ticket.date_registered.strftime('%m/%d/%Y %H:%M:%S') }}, -->
+        <!-- por: {{ ticket.user }} -->
+</li>
+    {% endfor %}
+</ul>
+</div>
+<div class="col-md-6">
+<h3>Códigos No Registrados</h3>
+<ul class="list-group">
+          {% for ticket in no_registrados %}
+<li class="list-group-item">{{ ticket }}</li>
+          {% endfor %}
+</ul>
+</div>
+</div>
+{% endblock %}

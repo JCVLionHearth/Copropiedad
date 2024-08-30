@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+
+<!-- Moved the ticket counter to a higher position -->
+<div class="ticket-counter mt-4">
+    <h3>Códigos Registrados:</h3>
+    <div class="counter-box" id="counter-box">
+        <span id="ticket-count">0</span>
+    </div>
+ </div>
+<center><button class="btn btn-outline-success mt-2" onclick="refreshPage()">Actualizar Conteo</button></center>
+<form action="{{ url_for('registrar_ticket') }}" method="post" id="ticket-form">
+   <label for="ticket">Ingrese el código del Apartamento:</label>
+   <input type="text" id="ticket" name="ticket" class="form-control" required>
+   <button type="submit" class="btn btn-success mt-2 btn-block">Registrar</button>
+</form>
+<div id="message" class="mt-3"></div>
+
+
+<script>
+   function updateTicketCount() {
+       fetch('/get_ticket_count')
+       .then(response => response.json())
+       .then(data => {
+           const ticketCount = document.getElementById('ticket-count');
+           const counterBox = document.getElementById('counter-box');
+           ticketCount.innerText = data.count;
+           counterBox.classList.add('updated');
+           setTimeout(() => counterBox.classList.remove('updated'), 300);
+       });
+   }
+   document.getElementById('ticket-form').onsubmit = function(event) {
+       event.preventDefault();
+       const form = event.target;
+       const data = new FormData(form);
+       fetch(form.action, {
+           method: form.method,
+           body: data,
+       })
+       .then(response => response.json())
+       .then(result => {
+           const messageDiv = document.getElementById('message');
+           if (result.status === 'success') {
+               messageDiv.innerHTML = `<div class="alert alert-success"><i class="fas fa-check-circle"></i> ${result.message}</div>`;
+               document.getElementById('ticket').value = '';
+               updateTicketCount(); // Update the ticket count after successful registration
+           } else {
+               messageDiv.innerHTML = `<div class="alert alert-danger"><i class="fas fa-exclamation-circle"></i> ${result.message}</div>`;
+           }
+       });
+   };
+   // Initial ticket count update
+   updateTicketCount();
+   function refreshPage(){
+        location.reload();
+   }
+</script>
+{% endblock %}

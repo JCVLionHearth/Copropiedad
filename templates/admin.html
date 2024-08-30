@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Administración{% endblock %}
+{% block content %}
+<h2>Administración</h2>
+<a href="{{ url_for('exportar') }}">Exportar Códigos Registrados</a>
+<br>
+<a href="{{ url_for('reset') }}">Reiniciar Contador de Códigos</a>
+<!-- <h3>Estadísticas de Asistencia</h3>
+<ul>
+<li>General: {{ stats_general }}</li>
+<li>Cortesía: {{ stats_cortesia }}</li>
+<li>Preferencial: {{ stats_preferencial }}</li>
+<li>VIP: {{ stats_vip }}</li> -->
+<!-- </ul> -->
+{% endblock %}

@@ -1,0 +1,136 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+}
+header {
+    background-color: #04492f;
+    color: #fff;
+    padding: 1rem;
+    text-align: center;
+}
+header img {
+    height: 50px;
+}
+footer {
+    background-color: #04492f;
+    color: #fff;
+    text-align: center;
+    padding: 0.5rem;
+    width: 100%;
+    position: relative; /* Changed from fixed to relative */
+}
+.form-inline {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.form-control {
+    margin-right: 1rem;
+}
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+}
+.btn-danger {
+    background-color: #dc3545;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+}
+.mt-4 {
+    margin-top: 1.5rem;
+}
+/* Estilos para el contador de tickets */
+.ticket-counter {
+    text-align: center;
+    margin-top: 20px;
+}
+.counter-box {
+    display: inline-block;
+    background: linear-gradient(135deg, #000000, #015c45);
+    color: #fff;
+    padding: 5px 40px;
+    border-radius: 10px;
+    font-size: 3rem;
+    font-weight: bold;
+    margin-top: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+.counter-box.updated {
+    animation: pulse 0.3s;
+}
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .counter-box {
+        font-size: 2rem;
+        padding: 15px 30px;
+    }
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+   header {
+       padding: 0.5rem;
+   }
+   header img {
+       height: 40px;
+   }
+   .form-inline {
+       flex-direction: column;
+   }
+   .form-control {
+       margin: 0.5rem 0;
+   }
+   .btn-primary,
+   .btn-danger {
+       width: 100%;
+   }
+   footer {
+       padding: 0.5rem;
+   }
+}
+@media (max-width: 576px) {
+   header img {
+       height: 30px;
+   }
+   footer {
+       font-size: 0.8rem;
+   }
+}
+@media (max-width: 768px) {
+   .list-group-item {
+       font-size: 0.9rem; /* Reduce the font size on smaller screens */
+   }
+   h3 {
+       font-size: 1.2rem; /* Adjust the size of the headings */
+   }
+}
+@media (max-width: 768px) {
+   .navbar-nav .nav-link {
+       text-align: center;
+       padding: 10px;
+       color:#fff
+   }
+   h1 {
+       font-size: 1.5rem;
+   }
+   h2 {
+       font-size: 1.2rem;
+   }
+}
