@@ -19,16 +19,16 @@ app.secret_key = 'your_secret_key'
 db_dir=os.path.join(os.getcwd(),'data')
 
 os.makedirs(db_dir,exist_ok=True)
-db_path=os.path.join(db_dir,'tickets.db')
+db_path=os.path.join(db_dir,'apartamentos.db')
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tickets.db'
 app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{db_path}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-class Ticket(db.Model):
+class Apartamento(db.Model):
    id = db.Column(db.Integer, primary_key=True)
    number = db.Column(db.String(20), unique=True, nullable=False)
-   category = db.Column(db.Float, nullable=False)
+   coeficient = db.Column(db.Float, nullable=False)
    user = db.Column(db.String(50), nullable=False)
    date_registered = db.Column(db.DateTime, default=datetime.utcnow)
 
@@ -42,9 +42,9 @@ with app.app_context():
    db.create_all()
 
 # Cargar datos desde Excel
-df_tickets = pd.read_excel('COEFICIENTES DE CO_PROPIEDAD.xlsx', engine='openpyxl')
-df_tickets['Ticket'] = df_tickets['Ticket'].astype(str)
-tickets_permitidos = df_tickets.set_index('Ticket')['Categoría'].to_dict()
+df_apartamentos = pd.read_excel('COEFICIENTES DE CO_PROPIEDAD.xlsx', engine='openpyxl')
+df_apartamentos['Apartamentos'] = df_apartamentos['Apartamentos'].astype(str)
+apartamentos_permitidos = df_apartamentos.set_index('Apartamentos')['Coeficiente'].to_dict()
 
 # Contraseña para reiniciar
 RESET_PASSWORD = 'propiedad.horizontal'
@@ -84,28 +84,28 @@ def dashboard():
 def registrar_ticket():
    if 'username' not in session:
        return jsonify({'status': 'error', 'message': 'No autenticado.'})
-   ticket = request.form['ticket'].strip()
+   apartamento = request.form['apartamento'].strip()
    usuario = session['username']
-   if ticket in tickets_permitidos:
-       existing_ticket = Ticket.query.filter_by(number=ticket).first()
-       categoria=tickets_permitidos[ticket]
-       if not existing_ticket:
-           new_ticket = Ticket(number=ticket, category=tickets_permitidos[ticket], user=usuario)
-           db.session.add(new_ticket)
+   if apartamento in apartamentos_permitidos:
+       existing_apartamento = Apartamento.query.filter_by(number=apartamento).first()
+       coeficiente=apartamentos_permitidos[apartamento]
+       if not existing_apartamento:
+           new_apartamento = Apartamento(number=apartamento, coeficient=apartamentos_permitidos[apartamento], user=usuario)
+           db.session.add(new_apartamento)
            db.session.commit()
-           return jsonify({'status': 'success', 'message': f'Ticket <b>{ticket}</b> registrado correctamente en la categoría: <b>{categoria}</b>'})
+           return jsonify({'status': 'success', 'message': f'Apartamento <b>{apartamento}</b> registrado correctamente con el coefieciente: <b>{coeficiente}</b>'})
        else:
-           return jsonify({'status': 'error', 'message': f'Ticket {ticket} ya <b>ha sido registrado anteriormente</b>.'})
+           return jsonify({'status': 'error', 'message': f'Apartamento {apartamento} ya <b>ha sido registrado anteriormente</b>.'})
    else:
-       return jsonify({'status': 'error', 'message': f'Ticket {ticket} <b>NO válido</b> o Ticket de <b>SoloTicket</b>.'})
+       return jsonify({'status': 'error', 'message': f'Apartamento {apartamento} <b>NO válido</b>.'})
 
 @app.route('/tickets')
 def mostrar_tickets():
    if 'username' not in session:
        return redirect(url_for('index'))
-   registrados = Ticket.query.all()
-   registrados_list = [{'number': t.number, 'category': t.category, 'user': t.user, 'date_registered': t.date_registered} for t in registrados]
-   no_registrados = set(tickets_permitidos.keys()) - {t['number'] for t in registrados_list}
+   registrados = Apartamento.query.all()
+   registrados_list = [{'number': t.number, 'coeficient': t.coeficient, 'user': t.user, 'date_registered': t.date_registered} for t in registrados]
+   no_registrados = set(apartamentos_permitidos.keys()) - {t['number'] for t in registrados_list}
    # total_coeficiente = sum([t['category'] for t in registrados_list])
    return render_template('tickets.html', registrados=registrados_list, no_registrados=list(no_registrados))
 
@@ -113,10 +113,10 @@ def mostrar_tickets():
 def admin():
    if 'username' not in session:
        return redirect(url_for('index'))
-   stats_general = Ticket.query.filter_by(category='GENERAL').count()
-   stats_cortesia = Ticket.query.filter_by(category='CORTESIA').count()
-   stats_preferencial = Ticket.query.filter_by(category='PREFERENCIAL').count()
-   stats_vip = Ticket.query.filter_by(category='VIP').count()
+   stats_general = Apartamento.query.filter_by(coeficient='GENERAL').count()
+   stats_cortesia = Apartamento.query.filter_by(coeficient='CORTESIA').count()
+   stats_preferencial = Apartamento.query.filter_by(coeficient='PREFERENCIAL').count()
+   stats_vip = Apartamento.query.filter_by(coeficient='VIP').count()
    return render_template('admin.html', stats_general=stats_general,stats_cortesia =stats_cortesia , stats_preferencial=stats_preferencial, stats_vip=stats_vip)
 
 @app.route('/reset', methods=['GET', 'POST'])
@@ -126,7 +126,7 @@ def reset():
    if request.method == 'POST':
        password = request.form['password']
        if password == RESET_PASSWORD:
-           db.session.query(Ticket).delete()
+           db.session.query(Apartamento).delete()
            db.session.commit()
            return redirect(url_for('admin'))
        else:
@@ -139,12 +139,12 @@ def exportar():
        return redirect(url_for('index'))
    si = io.StringIO()
    cw = csv.writer(si)
-   cw.writerow(['Ticket', 'Categoría', 'Usuario', 'Fecha'])
-   tickets = Ticket.query.all()
-   for t in tickets:
-       cw.writerow([t.number, t.category, t.user, t.date_registered.strftime('%Y-%m-%d %H:%M:%S')])
+   cw.writerow(['Apartamento', 'Coeficiente', 'Usuario', 'Fecha'])
+   apartamentos = Apartamento.query.all()
+   for t in apartamentos:
+       cw.writerow([t.number, t.coeficient, t.user, t.date_registered.strftime('%Y-%m-%d')])
    output = make_response(si.getvalue())
-   output.headers["Content-Disposition"] = "attachment; filename=tickets_registrados.csv"
+   output.headers["Content-Disposition"] = "attachment; filename=Apartamentos_registrados.csv"
    output.headers["Content-type"] = "text/csv"
    return output
 
@@ -152,10 +152,10 @@ def exportar():
 def graficos():
    if 'username' not in session:
        return redirect(url_for('index'))
-   stats_general = Ticket.query.filter_by(category='GENERAL').count()
-   stats_cortesia = Ticket.query.filter_by(category='CORTESIA').count()
-   stats_preferencial = Ticket.query.filter_by(category='PREFERENCIAL').count()
-   stats_vip = Ticket.query.filter_by(category='VIP').count()
+   stats_general = Apartamento.query.filter_by(coeficient='GENERAL').count()
+   stats_cortesia = Apartamento.query.filter_by(coeficient='CORTESIA').count()
+   stats_preferencial = Apartamento.query.filter_by(coeficient='PREFERENCIAL').count()
+   stats_vip = Apartamento.query.filter_by(coeficient='VIP').count()
 
    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
    
@@ -193,8 +193,8 @@ def graficos():
     
 @app.route('/get_ticket_count')
 def get_ticket_count():
-   count = Ticket.query.count()
-   total_coeficiente=db.session.query(db.func.sum(Ticket.category)).scalar()
+   count = Apartamento.query.count()
+   total_coeficiente=db.session.query(db.func.sum(Apartamento.coeficient)).scalar()
    total_coeficiente=f"{total_coeficiente:.3f}"
    return jsonify({'count': f'Apartamentos: {count} \n Coeficiente total: {total_coeficiente}' })
 

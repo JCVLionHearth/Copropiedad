@@ -39,7 +39,7 @@
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav mx-auto">
             <li class="nav-item active">
-                <a class="nav-link" href="{{ url_for('dashboard') }}">Registro de Códigos</a>
+                <a class="nav-link" href="{{ url_for('dashboard') }}">Registro de Apartamentos</a>
             </li>
             <div class="dropdown-divider"></div>
             <li class="nav-item dropdown">
@@ -47,7 +47,7 @@
                     Administración y Visualización
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="{{ url_for('mostrar_tickets') }}">Ver Códigos Registrados</a>
+                    <a class="dropdown-item" href="{{ url_for('mostrar_tickets') }}">Ver Apartamentos Registrados</a>
                     <a class="dropdown-item" href="{{ url_for('admin') }}">Panel de Administración</a>
                     <!-- <a class="dropdown-item" href="{{ url_for('graficos') }}">Ver Gráficos</a> -->
                 </div>
@@ -56,7 +56,7 @@
     </div>
 </nav>
 </div>
-<h1>Registro de Códigos</h1>
+<h1>Registro de Apartamentos</h1>
 <h2></h2>
 {% if session.get('username') %}
 <p>Bienvenido, {{ session['username'] }} | <a href="{{ url_for('logout') }}">Salir</a></p>

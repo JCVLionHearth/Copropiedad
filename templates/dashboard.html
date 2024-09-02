@@ -11,8 +11,8 @@
  </div>
 <center><button class="btn btn-outline-success mt-2" onclick="refreshPage()">Actualizar Conteo</button></center>
 <form action="{{ url_for('registrar_ticket') }}" method="post" id="ticket-form">
-   <label for="ticket">Ingrese el código del Apartamento:</label>
-   <input type="text" id="ticket" name="ticket" class="form-control" required>
+   <label for="apartamento">Ingrese el código del Apartamento:</label>
+   <input type="text" id="apartamento" name="apartamento" class="form-control" required>
    <button type="submit" class="btn btn-success mt-2 btn-block">Registrar</button>
 </form>
 <div id="message" class="mt-3"></div>
@@ -43,7 +43,7 @@
            const messageDiv = document.getElementById('message');
            if (result.status === 'success') {
                messageDiv.innerHTML = `<div class="alert alert-success"><i class="fas fa-check-circle"></i> ${result.message}</div>`;
-               document.getElementById('ticket').value = '';
+               document.getElementById('apartamento').value = '';
                updateTicketCount(); // Update the ticket count after successful registration
            } else {
                messageDiv.innerHTML = `<div class="alert alert-danger"><i class="fas fa-exclamation-circle"></i> ${result.message}</div>`;
